@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Student Success Early-Warning Model Report</title>
+    <style>
+      :root {
+        --text: #1a1a1a;
+        --muted: #666;
+        --border: #e2e6ea;
+        --bg: #ffffff;
+        --accent: #1f4e79;
+        --soft: #f8fafc;
+      }
+
+      @page {
+        margin: 1in;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 60px 30px 80px;
+      }
+
+      header {
+        margin-bottom: 30px;
+      }
+
+      header h1 {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--accent);
+      }
+
+      header .meta {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-top: 40px;
+        margin-bottom: 14px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid var(--border);
+      }
+
+      h3 {
+        font-size: 16px;
+        margin-top: 22px;
+        margin-bottom: 8px;
+      }
+
+      p {
+        margin: 12px 0;
+      }
+
+      ul {
+        margin: 10px 0 10px 25px;
+      }
+
+      .kpi {
+        background: var(--soft);
+        border-left: 5px solid var(--accent);
+        padding: 16px 18px;
+        border-radius: 8px;
+        margin: 16px 0;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      figure {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+
+      figure img {
+        width: 100%;
+        border-radius: 8px;
+      }
+
+      figcaption {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 14px;
+      }
+
+      th {
+        background: var(--soft);
+        text-align: left;
+        padding: 12px;
+        border-bottom: 2px solid var(--border);
+      }
+
+      td {
+        padding: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      tr:hover {
+        background: #f4f6f8;
+      }
+
+      .footer {
+        margin-top: 60px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+        figure {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <h1>
+          Predicting Student Academic Success Using Statistical Modeling and
+          Machine Learning
+        </h1>
+        <div class="meta">
+          <div><strong>Author:</strong> Salma Hasannejad</div>
+          <div><strong>Program:</strong> PhD Data Science</div>
+          <div><strong>Date:</strong> 2026-02-25</div>
+        </div>
+      </header>
+
+      <h2>1. Introduction</h2>
+      <p>
+        Early identification of students at academic risk is a core component of
+        learning analytics and institutional assessment. This project builds a
+        reproducible analytics pipeline to predict whether a student will
+        <strong>pass or fail</strong> based on information available prior to
+        course completion.
+      </p>
+      <p>
+        The workflow demonstrates skills aligned with assessment and analytics
+        work: data preparation, SQL database management, statistical modeling,
+        supervised machine learning, visualization, and reporting.
+      </p>
+
+      <h2>2. Data Description</h2>
+      <p>
+        This analysis uses the public UCI student performance dataset (N = 395).
+        Key variables include demographics (e.g., sex, age, school), engagement
+        (e.g., absences, study time, prior failures), and early academic
+        performance (G1).
+      </p>
+      <div class="kpi">
+        <div>
+          <strong>Outcome Variable:</strong> <code>pass_fail</code> (1 = G3 ≥
+          10, 0 = G3 &lt; 10)
+        </div>
+        <div class="note">
+          To avoid data leakage, the final grade (G3) was used only to construct
+          the target variable and was excluded from predictors.
+        </div>
+      </div>
+      <p>
+        The dataset was loaded into a relational SQLite database with three
+        tables: <code>students</code>, <code>engagement</code>, and
+        <code>outcomes</code>. SQL joins were used to create the modeling
+        dataset and to compute assessment-style KPIs.
+      </p>
+
+      <h2>3. Methodology</h2>
+
+      <h3>3.1 Data Preparation</h3>
+      <ul>
+        <li>Loaded raw CSV data and created a relational schema in SQLite</li>
+        <li>
+          Standardized and renamed variables (e.g., parental education features)
+        </li>
+        <li>One-hot encoded categorical features (school, sex, address)</li>
+        <li>Standardized numeric predictors</li>
+        <li>Train/test split: 75% / 25% (stratified)</li>
+      </ul>
+
+      <h3>3.2 Exploratory Data Analysis</h3>
+      <p>
+        Visualizations were generated using matplotlib to explore performance
+        distribution and engagement patterns. These plots reflect common
+        reporting outputs in learning analytics contexts.
+      </p>
+
+      <div class="grid">
+        <figure>
+          <img
+            src="../outputs/figures/01_g3_distribution.png"
+            alt="G3 distribution"
+          />
+          <figcaption>
+            <strong>Figure 1.</strong> Distribution of final grades (G3).
+          </figcaption>
+        </figure>
+        <figure>
+          <img
+            src="../outputs/figures/02_absences_vs_g3.png"
+            alt="Absences vs G3"
+          />
+          <figcaption>
+            <strong>Figure 2.</strong> Relationship between absences and final
+            grade (G3).
+          </figcaption>
+        </figure>
+        <figure>
+          <img
+            src="../outputs/figures/03_pass_rate_by_sex.png"
+            alt="Pass rate by sex"
+          />
+          <figcaption>
+            <strong>Figure 3.</strong> Pass rate by sex (example subgroup KPI).
+          </figcaption>
+        </figure>
+        <figure>
+          <img
+            src="../outputs/figures/04_feature_importance_rf.png"
+            alt="Feature importance"
+          />
+          <figcaption>
+            <strong>Figure 4.</strong> Random Forest feature importance (top
+            predictors).
+          </figcaption>
+        </figure>
+      </div>
+
+      <h3>3.3 Models</h3>
+      <p>
+        Two supervised learning models were trained to predict
+        <code>pass_fail</code>:
+      </p>
+      <ul>
+        <li>
+          <strong>Logistic Regression</strong> (interpretable baseline common in
+          institutional research)
+        </li>
+        <li>
+          <strong>Random Forest</strong> (nonlinear model with
+          feature-importance output)
+        </li>
+      </ul>
+      <p>
+        Performance was evaluated using <strong>ROC-AUC</strong> on the test
+        set. ROC-AUC measures how well the model separates students who pass
+        versus fail (0.50 = random, 1.00 = perfect).
+      </p>
+
+      <h2>4. Results</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>ROC-AUC (Test Set)</th>
+            <th>Interpretation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Logistic Regression</td>
+            <td><strong>0.905</strong></td>
+            <td>
+              Strong discrimination; interpretable relationships between
+              predictors and pass/fail.
+            </td>
+          </tr>
+          <tr>
+            <td>Random Forest</td>
+            <td><strong>0.880</strong></td>
+            <td>
+              Strong performance; useful for identifying key predictive signals
+              via feature importance.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Both models achieved strong predictive performance. Logistic regression
+        slightly outperformed the random forest, which suggests that the
+        relationship between predictors and student success may be largely
+        linear and that an interpretable model may be sufficient for decision
+        support.
+      </p>
+
+      <h3>Key Predictors</h3>
+      <p>
+        Feature importance analysis indicates that the strongest predictors of
+        pass/fail status include:
+      </p>
+      <ul>
+        <li>First period grade (G1)</li>
+        <li>Prior failures</li>
+        <li>Absences</li>
+        <li>Study time</li>
+      </ul>
+
+      <h2>5. Implications for Learning Analytics</h2>
+      <p>
+        The results support the feasibility of an early-warning approach that
+        uses early performance and engagement signals to identify students who
+        may benefit from timely support. In an institutional context, these
+        results could inform:
+      </p>
+      <ul>
+        <li>Early outreach when absences exceed a threshold</li>
+        <li>
+          Targeted tutoring or advising for students with low early grades
+        </li>
+        <li>
+          Monitoring dashboards for program assessment and retention initiatives
+        </li>
+      </ul>
+
+      <h2>6. Reproducibility & Workflow</h2>
+      <p>
+        The project is structured as a reproducible workflow with clear
+        separation of data, SQL schema/queries, processing scripts, model
+        outputs, and report artifacts.
+      </p>
+      <ul>
+        <li>
+          <code>src/build_db.py</code> creates the SQLite database from raw CSV
+        </li>
+        <li>
+          <code>src/eda.py</code> generates descriptive statistics and EDA plots
+        </li>
+        <li>
+          <code>src/train_model.py</code> trains models, evaluates ROC-AUC, and
+          saves metrics/feature importance plots
+        </li>
+        <li>
+          Outputs saved to <code>outputs/</code> (figures and metrics JSON)
+        </li>
+      </ul>
+
+      <h2>7. Conclusion</h2>
+      <p>
+        This project demonstrates applied learning analytics using SQL and
+        Python for data preparation, modeling, evaluation, and reporting. The
+        strong ROC-AUC results indicate that early academic performance and
+        engagement variables can provide meaningful predictive signal for
+        student success.
+      </p>
+
+      <div class="footer">
+        <div>
+          <strong>Project artifacts:</strong> SQLite database, SQL queries,
+          reproducible Python scripts, figures, and metrics.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
